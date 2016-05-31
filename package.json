@@ -1,0 +1,24 @@
+{
+  "name": "governify-agreement-manager",
+  "version": "0.0.1",
+  "description": "Module to manage governify agreements with translators, mappers and analysis functions",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/isa-group/governify-agreement-manager.git"
+  },
+  "keywords": [
+    "mapper",
+    "governify",
+    "sla4oai",
+    "agreements"
+  ],
+  "author": "Daniel Arteaga (darteaga@us.es)",
+  "license": "ISC",
+  "dependencies": {
+    "js-yaml": "^3.6.1"
+  }
+}
