@@ -6,9 +6,7 @@
  */
 
 'use strict'
-var fs = require('fs');
-var yaml = require('js-yaml');
 
 module.exports = {
-	mappers : require('./mappers/mappers.js')
+  sla4oai: require('./sla4oai/sla4oai.js')
 }
