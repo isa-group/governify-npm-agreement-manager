@@ -88,7 +88,7 @@ function convertOAI2Governify (oaiModel, successCb, errorCb){
 					oaiModel.metrics
 				)
 			),
-			new agreementTerms(
+			new terms(
 				new pricing() ,
 				{}, //configurations
 				{}, //metrics
@@ -102,7 +102,7 @@ function convertOAI2Governify (oaiModel, successCb, errorCb){
 	//processing default pricing
 
 	if(oaiModel.pricing){
-		governifyModel.agreementTerms.pricing.of[oaiModel.pricing.plan ? oaiModel.pricing.plan : '*'] = new pricingObject(
+		governifyModel.terms.pricing.of[oaiModel.pricing.plan ? oaiModel.pricing.plan : '*'] = new pricingObject(
 				oaiModel.pricing.cost,
 				oaiModel.pricing.currency,
 				new billingObject (oaiModel.pricing.billing, oaiModel.context.validity ? oaiModel.context.validity.effectiveDate : null)
@@ -114,13 +114,13 @@ function convertOAI2Governify (oaiModel, successCb, errorCb){
 
 		var values = {};
 		values[oaiModel.pricing.plan ? oaiModel.pricing.plan : '*'] = {of: oaiModel.availability};
-		governifyModel.agreementTerms.configurations['availability'] = new configuration(values);
+		governifyModel.terms.configurations['availability'] = new configuration(values);
 
 	}
 	for(var conf in oaiModel.configuration){
 		var values = {};
 		values[oaiModel.pricing.plan ? oaiModel.pricing.plan : '*'] = {of: oaiModel.configuration[conf] };
-		governifyModel.agreementTerms.configurations[conf] = new configuration(values);
+		governifyModel.terms.configurations[conf] = new configuration(values);
 	}
 
 	//Processing default quotas
@@ -148,22 +148,22 @@ function convertOAI2Governify (oaiModel, successCb, errorCb){
 		for( var plan in oaiModel.plans){
 
 			if(oaiModel.plans[plan].availability){
-				governifyModel.agreementTerms.configurations['availability'].values[plan] = {of: oaiModel.plans[plan].availability};
+				governifyModel.terms.configurations['availability'].values[plan] = {of: oaiModel.plans[plan].availability};
 			}
 			if(oaiModel.plans[plan].configuration){
 				for(var conf in oaiModel.plans[plan].configuration){
-					if(governifyModel.agreementTerms.configurations[conf]){
-						governifyModel.agreementTerms.configurations[conf].values[plan] = {of: oaiModel.plans[plan].configuration[conf] };
+					if(governifyModel.terms.configurations[conf]){
+						governifyModel.terms.configurations[conf].values[plan] = {of: oaiModel.plans[plan].configuration[conf] };
 					}else{
 						var values = {};
 						values[plan] = {of: oaiModel.plans[plan].configuration[conf] };
-						governifyModel.agreementTerms.configurations[conf] = new configuration(values);
+						governifyModel.terms.configurations[conf] = new configuration(values);
 					}
 				}
 			}
 
 			if(oaiModel.plans[plan].pricing){
-				governifyModel.agreementTerms.pricing.of[plan] = new pricingObject(
+				governifyModel.terms.pricing.of[plan] = new pricingObject(
 					oaiModel.plans[plan].pricing.cost ? oaiModel.plans[plan].pricing.cost : oaiModel.pricing.cost,
 					oaiModel.plans[plan].pricing.currency ? oaiModel.plans[plan].pricing. currency : oaiModel.pricing.currency,
 					new billingObject (
@@ -197,23 +197,23 @@ function processQuotas(quotas, plan, governifyModel){
 		for(var operation in quotas[path]){
 			for(var m in quotas[path][operation]){
 
-				if(!governifyModel.agreementTerms.metrics[m])
-					governifyModel.agreementTerms.metrics[m] = new metric(m);
+				if(!governifyModel.terms.metrics[m])
+					governifyModel.terms.metrics[m] = new metric(m);
 
-				if(!governifyModel.agreementTerms.quotas['quotas_' + m])
-					governifyModel.agreementTerms.quotas['quotas_' + m] = new quota(m);
+				if(!governifyModel.terms.quotas['quotas_' + m])
+					governifyModel.terms.quotas['quotas_' + m] = new quota(m);
 
 				for(var li in quotas[path][operation][m]){
 					var name = createScope (plan, path, operation, quotas[path][operation][m][li].scope);
 
-					if(!governifyModel.agreementTerms.quotas['quotas_' + m].of[name]){
-						governifyModel.agreementTerms.quotas['quotas_' + m].of[name] = {
+					if(!governifyModel.terms.quotas['quotas_' + m].of[name]){
+						governifyModel.terms.quotas['quotas_' + m].of[name] = {
 							limits: [
 								new limit(quotas[path][operation][m][li].max, quotas[path][operation][m][li].period ? quotas[path][operation][m][li].period : null )
 							]
 						}
 					}else{
-						governifyModel.agreementTerms.quotas['quotas_' + m].of[name].limits.push(
+						governifyModel.terms.quotas['quotas_' + m].of[name].limits.push(
 								new limit(quotas[path][operation][m][li].max, quotas[path][operation][m][li].period ? quotas[path][operation][m][li].period : null )
 							);
 					}
@@ -230,23 +230,23 @@ function processRates(rates, plan, governifyModel){
 		for(var operation in rates[path]){
 			for(var m in rates[path][operation]){
 
-				if(!governifyModel.agreementTerms.metrics[m])
-					governifyModel.agreementTerms.metrics[m] = new metric(m);
+				if(!governifyModel.terms.metrics[m])
+					governifyModel.terms.metrics[m] = new metric(m);
 
-				if(!governifyModel.agreementTerms.rates['rates_' + m])
-					governifyModel.agreementTerms.rates['rates_' + m] = new rate(m);
+				if(!governifyModel.terms.rates['rates_' + m])
+					governifyModel.terms.rates['rates_' + m] = new rate(m);
 
 				for(var li in rates[path][operation][m]){
 					var name = createScope (plan, path, operation, rates[path][operation][m][li].scope);
 
-					if(!governifyModel.agreementTerms.rates['rates_' + m].of[name]){
-						governifyModel.agreementTerms.rates['rates_' + m].of[name] = {
+					if(!governifyModel.terms.rates['rates_' + m].of[name]){
+						governifyModel.terms.rates['rates_' + m].of[name] = {
 							limits: [
 								new limit(rates[path][operation][m][li].max, rates[path][operation][m][li].period ? rates[path][operation][m][li].period : null )
 							]
 						}
 					}else{
-						governifyModel.agreementTerms.rates['rates_' + m].of[name].limits.push(
+						governifyModel.terms.rates['rates_' + m].of[name].limits.push(
 								new limit(rates[path][operation][m][li].max, rates[path][operation][m][li].period ? rates[path][operation][m][li].period : null )
 							);
 					}
@@ -265,15 +265,15 @@ function processGuarantees(guarantees, plan, governifyModel){
 
 				var m = guarantees[path][operation][o].objective.split(' ')[0];
 
-				if(!governifyModel.agreementTerms.metrics[m])
-					governifyModel.agreementTerms.metrics[m] = new metric(m);
+				if(!governifyModel.terms.metrics[m])
+					governifyModel.terms.metrics[m] = new metric(m);
 
-				if(!governifyModel.agreementTerms.guarantees['guarantees_' + m])
-					governifyModel.agreementTerms.guarantees['guarantees_' + m] = new guarantee();
+				if(!governifyModel.terms.guarantees['guarantees_' + m])
+					governifyModel.terms.guarantees['guarantees_' + m] = new guarantee();
 
 				var name = createScope (plan, path, operation, guarantees[path][operation][o].scope);
 
-				governifyModel.agreementTerms.guarantees['guarantees_' + m].of[name] = new objective(
+				governifyModel.terms.guarantees['guarantees_' + m].of[name] = new objective(
 						guarantees[path][operation][o].objective,
 						guarantees[path][operation][o].window,
 						guarantees[path][operation][o].period
@@ -296,12 +296,12 @@ function createScope (plan, path, operation, level){
 
 /** GOVERNIFY MODEL **/
 
-function governify(id, version, type, context, agreementTerms, creationConstraints){
+function governify(id, version, type, context, terms, creationConstraints){
 	this.id = id;
 	this.version = version;
 	this.type = type;
 	this.context = context;
-	this.agreementTerms = agreementTerms;
+	this.terms = terms;
 	if(creationConstraints)
 		this.creationConstraints = creationConstraints;
 }
@@ -352,7 +352,7 @@ function oaiScopes(){
 		}
 	}
 }
-function agreementTerms(pricing, configurations, metrics, quotas, rates, guarantees){
+function terms(pricing, configurations, metrics, quotas, rates, guarantees){
 	this.pricing = pricing;
 	this.configurations = configurations;
 	this.metrics = metrics;
@@ -391,7 +391,7 @@ function quota(metric){
 		{$ref: "#/context/definitions/scopes/oai/level"}
 	];
 
-	this.over = {$ref: "#/agreementTerms/metrics/" + metric};
+	this.over = {$ref: "#/terms/metrics/" + metric};
 
 	this.of = {};
 
@@ -405,7 +405,7 @@ function rate(metric){
 		{$ref: "#/context/definitions/scopes/oai/level"}
 	];
 
-	this.over = {$ref: "#/agreementTerms/metrics/" + metric};
+	this.over = {$ref: "#/terms/metrics/" + metric};
 
 	this.of = {};
 }
