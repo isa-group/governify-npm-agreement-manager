@@ -1,6 +1,6 @@
-# Governify Agreement Manager
+# Governify NPM Agreement Manager
 
-Module to manage governify agreements with translators, mappers and analysis functions
+NPM Module to manage governify agreements with translators, parsers, and analysis functions
 
 ## INSTALL
 
@@ -8,19 +8,19 @@ Module to manage governify agreements with translators, mappers and analysis fun
 npm install governify-agreement-manager --save
 ```
 
-## MAPPERS USAGE
+## TRANSLATORS USAGE
 
-Mappers transforms agreement documents from external of governify model to Governify Model, e.g. SLA4OAI Model
+Translator transforms agreement documents from external of governify model to Governify Model, e.g. SLA4OAI Model
 
 ### FROM String
 
 ```
 var agreementManager = require('governify-agreement-manager');
-var mapper = agreementManager.mappers.sla4oai;
+var translator = agreementManager.translators.sla4oai;
 
 var sla4oaiString  = '...';
 
-mapper.convertString(sla4oaiString, (data)=>{
+translator.convertString(sla4oaiString, (data)=>{
 
       //SUCCESS ACTIONS
 
@@ -35,11 +35,11 @@ mapper.convertString(sla4oaiString, (data)=>{
 
 ```
 var agreementManager = require('governify-agreement-manager');
-var mapper = agreementManager.mappers.sla4oai;
+var translator = agreementManager.translators.sla4oai;
 
 var sla4oaiUri  = './data/plans.yaml';
 
-mapper.convertFile(sla4oaiUri, (data)=>{
+translator.convertFile(sla4oaiUri, (data)=>{
 
       //SUCCESS ACTIONS
 
@@ -53,13 +53,13 @@ mapper.convertFile(sla4oaiUri, (data)=>{
 
 ```
 var agreementManager = require('governify-agreement-manager');
-var mapper = agreementManager.mappers.sla4oai;
+var translator = agreementManager.translators.sla4oai;
 
 var sla4oaiObject  = {
   // ALL CONTENT
 };
 
-mapper.convertObject(sla4oaiObject, (data)=>{
+translator.convertObject(sla4oaiObject, (data)=>{
 
       //SUCCESS ACTIONS
 
