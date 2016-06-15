@@ -10,5 +10,5 @@ var fs = require('fs');
 var yaml = require('js-yaml');
 
 module.exports = {
-	mappers : require('./mappers/mappers.js')
+	translators : require('./translators/translators.js')
 }
