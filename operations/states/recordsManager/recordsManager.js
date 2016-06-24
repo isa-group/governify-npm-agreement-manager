@@ -24,9 +24,11 @@ module.exports = {
 
 //save functions
 function _metricsSave (state, name, scope, window, value){
+      console.log("saving metrics: " + name);
+      console.log(state.metrics);
       for (var m in state.metrics){
           var metric = state.metrics[m];
-          if(isMetrics(name, scope, window, metric))
+          if(metric && isMetrics(name, scope, window, metric))
               save(metric.records, new recordMetrics(value));
       }
 }
@@ -99,12 +101,13 @@ function _ratesCurrent (state, name, scope){
 
 //scopes and window check
 function isMetrics (name, scope, window, metric){
+    if(!metric.metric) return false;
     var ret = true;
     if(metric.metric != name){
         ret = ret && false;
     }
     for (var s in scope){
-        if(metric.scope[s] != scope[s])
+        if( metric.scope[s] != scope[s])
           ret = ret && false;
     }
     for (var w in window){
@@ -115,6 +118,7 @@ function isMetrics (name, scope, window, metric){
 }
 
 function isQuotas (name, scope, quota){
+    if(!quota.quota) return false;
     var ret = true;
     if(quota.quota != name){
         ret = ret && false;
@@ -127,6 +131,7 @@ function isQuotas (name, scope, quota){
 }
 
 function isRates (name, scope, rate){
+    if(!rate.rate) return false;
     var ret = true;
     if(rate.rate != name){
         ret = ret && false;
