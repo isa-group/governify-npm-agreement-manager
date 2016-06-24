@@ -1,0 +1,75 @@
+context:
+  id: pro_petstore_YMkddfs
+  sla: '1.0'
+  type: instance
+  api: ./petstore-service.yml
+  provider: ISAGroup
+  consumer: icinetic
+  validity:
+    effectiveDate: 2015-05-16T09:00:54Z
+    expirationDate: 2016-05-16T09:00:54Z
+infrastructure:
+  supervisor: http://supervisor.oai.governify.io/api/v1/
+  monitor: http://monitor.oai.governify.io/api/v1/
+  logs: http://logs.oai.governify.io/api/v1/
+metrics:
+  animalTypes:
+    type: integer
+    format: int64
+    description: Number of different animal types.
+    resolution: payload # metric will be passed to /check by payload
+    # before consumption for sla state calculation
+  requests:
+    type: integer
+    format: int64
+    description: Number of requests
+    resolution: consumption # metric will be passed after consumption
+
+  resourceInstances:
+    type: integer
+    format: int64
+    description: Number of pet resources
+    resolution: consumption # metric will be passed after consumption
+
+  responseTimeMs:
+    $ref: tests/metrics.json#/responseTimeMs
+
+pricing:
+  cost: 50
+  currency: EUR
+  billing: monthly
+  plan: pro
+availability: R/00:00:00Z/23:59:59Z
+configuration:
+  filteringType: multipleTags
+  xmlFormat: true
+quotas:
+  /pets:
+    get:
+      requests:
+        - max: 20
+          period: secondly
+          scope: account
+        - max: 100
+          period: secondly
+          scope: tenant
+    post:
+      requests:
+        - max: 100
+          period: minutely
+      resourceInstances:
+        - max: 500
+      animalTypes:
+        - max: 5
+rates:
+  /pets/{id}:
+    get:
+      requests:
+        - max: 20
+          period: secondly
+guarantees:
+  global:
+    global:
+      - objective: responseTimeMs <= 250
+        period: daily
+        window: dynamic

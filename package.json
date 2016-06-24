@@ -19,6 +19,8 @@
   "author": "Daniel Arteaga (darteaga@us.es)",
   "license": "ISC",
   "dependencies": {
-    "js-yaml": "^3.6.1"
+    "iso8601": "^1.1.1",
+    "js-yaml": "^3.6.1",
+    "json-schema-deref": "^0.3.2"
   }
 }

@@ -1,0 +1,201 @@
+agreementId: pro_petstore_YMkddfs
+fulfilled: true
+scope:
+  resource: '*'
+  operation: '*'
+  level: '*'
+pricing: {}
+metrics:
+  - metric: requests
+    scope:
+      resource: /pets
+      operation: get
+      level: account
+    schema:
+      type: integer
+      format: int64
+      description: Number of requests
+    window:
+      type: static
+      period: secondly
+    records:
+      - value: 0
+        time: '2016-06-24T14:39:32Z'
+      - value: 1
+        time: '2016-06-24T14:39:32Z'
+      - value: 2
+        time: '2016-06-24T14:39:32Z'
+      - value: 3
+        time: '2016-06-24T14:39:32Z'
+      - value: 4
+        time: '2016-06-24T14:39:32Z'
+      - value: 5
+        time: '2016-06-24T14:39:32Z'
+      - value: 6
+        time: '2016-06-24T14:39:32Z'
+      - value: 7
+        time: '2016-06-24T14:39:32Z'
+      - value: 8
+        time: '2016-06-24T14:39:32Z'
+      - value: 9
+        time: '2016-06-24T14:39:32Z'
+  - metric: requests
+    scope:
+      resource: /pets
+      operation: get
+      level: tenant
+    schema:
+      type: integer
+      format: int64
+      description: Number of requests
+    window:
+      type: static
+      period: secondly
+    records: []
+  - metric: requests
+    scope:
+      resource: /pets
+      operation: post
+      level: account
+    schema:
+      type: integer
+      format: int64
+      description: Number of requests
+    window:
+      type: static
+      period: minutely
+    records: []
+  - metric: resourceInstances
+    scope:
+      resource: /pets
+      operation: post
+      level: account
+    schema:
+      type: integer
+      format: int64
+      description: Number of pet resources
+    window:
+      type: static
+    records: []
+  - metric: animalTypes
+    scope:
+      resource: /pets
+      operation: post
+      level: account
+    schema:
+      type: integer
+      format: int64
+      description: Number of different animal types.
+    window:
+      type: static
+    records: []
+  - metric: requests
+    scope:
+      resource: '/pets/{id}'
+      operation: get
+      level: account
+    schema:
+      type: integer
+      format: int64
+      description: Number of requests
+    window:
+      type: static
+      period: secondly
+    records: []
+quotas:
+  - quota: quotas_requests
+    scope:
+      resource: /pets
+      operation: get
+      level: account
+    logs: {}
+    period: {}
+    evidences: []
+    records:
+      - fulfilled: true
+        time: '2016-06-24T14:39:32Z'
+      - fulfilled: true
+        time: '2016-06-24T14:39:32Z'
+      - fulfilled: true
+        time: '2016-06-24T14:39:32Z'
+      - fulfilled: true
+        time: '2016-06-24T14:39:32Z'
+      - fulfilled: true
+        time: '2016-06-24T14:39:32Z'
+      - fulfilled: true
+        time: '2016-06-24T14:39:32Z'
+      - fulfilled: true
+        time: '2016-06-24T14:39:32Z'
+      - fulfilled: true
+        time: '2016-06-24T14:39:32Z'
+      - fulfilled: true
+        time: '2016-06-24T14:39:32Z'
+      - fulfilled: true
+        time: '2016-06-24T14:39:32Z'
+  - quota: quotas_requests
+    scope:
+      resource: /pets
+      operation: get
+      level: tenant
+    logs: {}
+    period: {}
+    evidences: []
+    records: []
+  - quota: quotas_requests
+    scope:
+      resource: /pets
+      operation: post
+      level: account
+    logs: {}
+    period: {}
+    evidences: []
+    records: []
+  - quota: quotas_resourceInstances
+    scope:
+      resource: /pets
+      operation: post
+      level: account
+    logs: {}
+    period: {}
+    evidences: []
+    records: []
+  - quota: quotas_animalTypes
+    scope:
+      resource: /pets
+      operation: post
+      level: account
+    logs: {}
+    period: {}
+    evidences: []
+    records: []
+rates:
+  - rate: rates_requests
+    scope:
+      resource: '/pets/{id}'
+      operation: get
+      level: account
+    logs: {}
+    period: {}
+    evidences: []
+    records:
+      - fulfilled: true
+        time: '2016-06-24T14:39:32Z'
+      - fulfilled: true
+        time: '2016-06-24T14:39:32Z'
+      - fulfilled: true
+        time: '2016-06-24T14:39:32Z'
+      - fulfilled: true
+        time: '2016-06-24T14:39:32Z'
+      - fulfilled: true
+        time: '2016-06-24T14:39:32Z'
+      - fulfilled: true
+        time: '2016-06-24T14:39:32Z'
+      - fulfilled: true
+        time: '2016-06-24T14:39:32Z'
+      - fulfilled: true
+        time: '2016-06-24T14:39:32Z'
+      - fulfilled: true
+        time: '2016-06-24T14:39:32Z'
+      - fulfilled: true
+        time: '2016-06-24T14:39:32Z'
+guarantees: []

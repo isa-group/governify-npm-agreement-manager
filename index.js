@@ -10,5 +10,6 @@ var fs = require('fs');
 var yaml = require('js-yaml');
 
 module.exports = {
-	translators : require('./translators/translators.js')
+	translators : require('./translators/translators.js'),
+	operations: require('./operations/operations.js')
 }
