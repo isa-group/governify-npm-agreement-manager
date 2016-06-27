@@ -165,6 +165,15 @@ function rateState(rate, scope, logs, period, evidences){
     this.records = [];
 }
 
+function guaranteeState(guarantee, scope, logs, period, evidences){
+    this.guarantee = guarantee;
+    this.scope = scope;
+    this.logs = logs;
+    this.period = period;
+    this.evidences = evidences;
+    this.records = [];
+}
+
 function metricState (metric, scope, schema, window){
     this.metric = metric;
     this.scope = scope;
