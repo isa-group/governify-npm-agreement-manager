@@ -24,11 +24,9 @@ module.exports = {
 
 //save functions
 function _metricsSave (state, name, scope, window, value){
-      console.log("saving metrics: " + name);
-      console.log(state.metrics);
       for (var m in state.metrics){
           var metric = state.metrics[m];
-          if(metric && isMetrics(name, scope, window, metric))
+          if(isMetrics(name, scope, window, metric))
               save(metric.records, new recordMetrics(value));
       }
 }

@@ -7,10 +7,10 @@ module.exports = {
 }
 
 function _initializeState (agModel, successCb, errorCb) {
-    deref(agModel, (err, fullSchema)=>{
-        if(err) return errorCb(err);
+  //  deref(agModel, (err, fullSchema)=>{
+  //      if(err) return errorCb(err);
         try{
-            agModel = fullSchema;
+  //          agModel = fullSchema;
 
             var agState = new state(
                 agModel.id,
@@ -85,7 +85,7 @@ function _initializeState (agModel, successCb, errorCb) {
                                     );
                     agState.rates.push(rateS);
                 }
-            }/**
+            }
             for (var q in agModel.terms.guarantees){
                 var guarantee = agModel.terms.guarantees[q];
 
@@ -94,32 +94,31 @@ function _initializeState (agModel, successCb, errorCb) {
                 }
                 for(var of in guarantee.of){
                     var qscope = guarantee.of[of].scope;
-                    var metricSchema = guarantee.over[metric];
+                    for( var metric in guarantee.of[of].with ){
+                        var metricS = new metricState(
+                                              metric,
+                                              new scope(qscope),
+                                              {},
+                                              new window(guarantee.of[of].window.type, guarantee.of[of].window.period)
+                                            );
 
-                    var metricS = new metricState(
-                                          metric,
-                                          new scope(qscope),
-                                          new schema (metricSchema),
-                                          new window("static", guarantee.of[of].limits[0].period)
-                                        );
-
-                    agState.metrics.push(metricS);
-
-                    var rateS = new rateState(
+                        agState.metrics.push(metricS);
+                    }
+                    var guaranteeS = new guaranteeState(
                                         guarantee.id,
                                         new scope(qscope),
                                         {},
                                         {},
                                         []
                                     );
-                    agState.rates.push(rateS);
+                    agState.guarantees.push(guaranteeS);
                 }
-            }**/
+            }
             successCb(agState);
         }catch(err){
             errorCb(err);
         }
-    });
+  //  });
 
 }
 
