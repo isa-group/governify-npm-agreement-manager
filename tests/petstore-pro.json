@@ -1,33 +1,26 @@
 {
   "context": {
-    "id": "pro_petstore_YMkddfs",
-    "sla": "1.0",
+    "id": "sla01_pro_petstore",
+    "sla": 1,
     "type": "instance",
     "api": "./petstore-service.yml",
     "provider": "ISAGroup",
-    "consumer": "icinetic",
+    "consumer": "icinetic.com",
     "validity": {
       "effectiveDate": "2015-05-16T09:00:54Z",
       "expirationDate": "2016-05-16T09:00:54Z"
     }
   },
   "infrastructure": {
-    "supervisor": "http://supervisor.oai.governify.io/api/v1/",
-    "monitor": "http://monitor.oai.governify.io/api/v1/",
-    "logs": "http://logs.oai.governify.io/api/v1/"
+    "supervisor": "http://supervisor.sla4oai.governify.io/v1/",
+    "monitor": "http://monitor.sla4oai.governify.io/v1/"
   },
   "metrics": {
     "animalTypes": {
       "type": "integer",
       "format": "int64",
       "description": "Number of different animal types.",
-      "resolution": "payload"
-    },
-    "requests": {
-      "type": "integer",
-      "format": "int64",
-      "description": "Number of requests",
-      "resolution": "consumption"
+      "resolution": "check"
     },
     "resourceInstances": {
       "type": "integer",
@@ -35,8 +28,11 @@
       "description": "Number of pet resources",
       "resolution": "consumption"
     },
+    "requests": {
+      "$ref": "./metrics.yml#requests"
+    },
     "responseTimeMs": {
-      "$ref": "tests/metrics.json#responseTimeMs"
+      "$ref": "./metrics.yml#responseTimeMs"
     }
   },
   "pricing": {
@@ -56,12 +52,12 @@
         "requests": [
           {
             "max": 20,
-            "period": "secondly",
+            "period": "minutely",
             "scope": "account"
           },
           {
             "max": 100,
-            "period": "secondly",
+            "period": "minutely",
             "scope": "tenant"
           }
         ]
@@ -92,7 +88,7 @@
         "requests": [
           {
             "max": 20,
-            "period": "secondly"
+            "period": "minutely"
           }
         ]
       }

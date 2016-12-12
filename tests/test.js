@@ -13,7 +13,6 @@ translators.convertFile('tests/petstore-pro.yaml', (data)=>{
       if(err) {
           return console.log(err);
       }
-
       console.log("The file was saved!");
   });
 }, (err) => {

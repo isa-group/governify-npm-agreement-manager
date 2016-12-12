@@ -1,30 +1,28 @@
-id: pro_petstore_YMkddfs
-version: '1.0'
+id: sla01_pro_petstore
+version: '1'
 type: agreement
 context:
   provider: ISAGroup
-  consumer: icinetic
+  consumer: icinetic.com
   validity:
-    init: 2015-05-16T09:00:54.000Z
+    initial: 2015-05-16T09:00:54.000Z
     end: 2016-05-16T09:00:54.000Z
   infrastructure:
-    supervisor: 'http://supervisor.oai.governify.io/api/v1/'
-    monitor: 'http://monitor.oai.governify.io/api/v1/'
-    logs: 'http://logs.oai.governify.io/api/v1/'
+    supervisor: 'http://supervisor.sla4oai.governify.io/v1/'
+    monitor: 'http://monitor.sla4oai.governify.io/v1/'
   definitions:
     schemas:
       animalTypes:
         type: integer
         format: int64
         description: Number of different animal types.
-      requests:
-        type: integer
-        format: int64
-        description: Number of requests
       resourceInstances:
         type: integer
         format: int64
         description: Number of pet resources
+      requests:
+        type: int64
+        description: Number of requests
       responseTimeMs:
         type: double
         unit: ms
@@ -43,40 +41,34 @@ context:
             Defines the level inside the organization in which limits will be
             checked
           type: string
+          enum:
+            - account
+            - tenant
+        account:
+          description: Account ID of current request
+          type: string
+          default: icinetic.com
       offering:
         plan:
           description: Defines diferent levels of service that are provided
           type: string
-    logs:
-      oai:
-        default: true
-        uri: 'http://logs.oai.governify.io/api/v1/'
-        scopes:
-          resource: resource
-          method: method
-          level: level
 terms:
   pricing:
-    of:
-      - scope: {}
-        cost: 50
-        currency: EUR
-        billing:
-          period: monthly
-          init: 2015-05-16T09:00:54.000Z
+    cost: 50
+    currency: EUR
+    billing:
+      period: monthly
+      initial: 2015-05-16T09:00:54.000Z
   configurations:
     availability:
       of:
-        - scope: {}
-          value: 'R/00:00:00Z/23:59:59Z'
+        - value: 'R/00:00:00Z/23:59:59Z'
     filteringType:
       of:
-        - scope: {}
-          value: multipleTags
+        - value: multipleTags
     xmlFormat:
       of:
-        - scope: {}
-          value: true
+        - value: 'true'
   metrics:
     requests:
       schema:
@@ -89,6 +81,8 @@ terms:
           $ref: '#/context/definitions/scopes/api/operation'
         level:
           $ref: '#/context/definitions/scopes/oai/level'
+        account:
+          $ref: '#/context/definitions/scopes/oai/account'
     resourceInstances:
       schema:
         $ref: '#/context/definitions/schemas/resourceInstances'
@@ -100,10 +94,12 @@ terms:
           $ref: '#/context/definitions/scopes/api/operation'
         level:
           $ref: '#/context/definitions/scopes/oai/level'
+        account:
+          $ref: '#/context/definitions/scopes/oai/account'
     animalTypes:
       schema:
         $ref: '#/context/definitions/schemas/animalTypes'
-      type: payload
+      type: check
       scope:
         resource:
           $ref: '#/context/definitions/scopes/api/resource'
@@ -111,6 +107,8 @@ terms:
           $ref: '#/context/definitions/scopes/api/operation'
         level:
           $ref: '#/context/definitions/scopes/oai/level'
+        account:
+          $ref: '#/context/definitions/scopes/oai/account'
     responseTimeMs:
       schema:
         $ref: '#/context/definitions/schemas/responseTimeMs'
@@ -122,6 +120,8 @@ terms:
           $ref: '#/context/definitions/scopes/api/operation'
         level:
           $ref: '#/context/definitions/scopes/oai/level'
+        account:
+          $ref: '#/context/definitions/scopes/oai/account'
   quotas:
     - id: quotas_requests
       scope:
@@ -131,30 +131,36 @@ terms:
           $ref: '#/context/definitions/scopes/api/operation'
         level:
           $ref: '#/context/definitions/scopes/oai/level'
+        account:
+          $ref: '#/context/definitions/scopes/oai/account'
       over:
         requests:
           $ref: '#/terms/metrics/requests'
       of:
         - scope:
-            path: /pets
+            resource: /pets
             operation: get
             level: account
+            account: '*'
           limits:
             - max: 20
-              period: secondly
+              period: minutely
         - scope:
-            path: /pets
+            resource: /pets
             operation: get
             level: tenant
+            account:
+              $ref: '#/context/consumer'
           limits:
             - max: 100
-              period: secondly
+              period: minutely
         - scope:
-            path: /pets
+            resource: /pets
             operation: post
             level: account
+            account: '*'
           limits:
-            - max: 100
+            - max: 5
               period: minutely
     - id: quotas_resourceInstances
       scope:
@@ -164,14 +170,17 @@ terms:
           $ref: '#/context/definitions/scopes/api/operation'
         level:
           $ref: '#/context/definitions/scopes/oai/level'
+        account:
+          $ref: '#/context/definitions/scopes/oai/account'
       over:
         resourceInstances:
           $ref: '#/terms/metrics/resourceInstances'
       of:
         - scope:
-            path: /pets
+            resource: /pets
             operation: post
             level: account
+            account: '*'
           limits:
             - max: 500
     - id: quotas_animalTypes
@@ -182,14 +191,17 @@ terms:
           $ref: '#/context/definitions/scopes/api/operation'
         level:
           $ref: '#/context/definitions/scopes/oai/level'
+        account:
+          $ref: '#/context/definitions/scopes/oai/account'
       over:
         animalTypes:
           $ref: '#/terms/metrics/animalTypes'
       of:
         - scope:
-            path: /pets
+            resource: /pets
             operation: post
             level: account
+            account: '*'
           limits:
             - max: 5
   rates:
@@ -201,17 +213,20 @@ terms:
           $ref: '#/context/definitions/scopes/api/operation'
         level:
           $ref: '#/context/definitions/scopes/oai/level'
+        account:
+          $ref: '#/context/definitions/scopes/oai/account'
       over:
         requests:
           $ref: '#/terms/metrics/requests'
       of:
         - scope:
-            path: '/pets/{id}'
+            resource: '/pets/{id}'
             operation: get
             level: account
+            account: '*'
           limits:
             - max: 20
-              period: secondly
+              period: minutely
   guarantees:
     - id: guarantees_responseTimeMs
       scope:
@@ -221,12 +236,15 @@ terms:
           $ref: '#/context/definitions/scopes/api/operation'
         level:
           $ref: '#/context/definitions/scopes/oai/level'
+        account:
+          $ref: '#/context/definitions/scopes/oai/account'
       of:
         - scope:
-            path: '*'
+            resource: '*'
             operation: '*'
             level: account
-          objective: responseTimeMs <= 250
+            account: '*'
+          objective: ' responseTimeMs <= 250'
           window:
             type: dynamic
             period: daily

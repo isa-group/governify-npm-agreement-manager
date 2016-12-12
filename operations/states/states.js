@@ -3,14 +3,17 @@ var deref = require('json-schema-deref');
 
 module.exports = {
     initializeState: _initializeState,
-    recordsManager: require('./recordsManager/recordsManager.js')
+    recordsManager: require('./recordsManager/recordsManager.js'),
+    constructors: {
+       metricState: _metricState
+    }
 }
 
 function _initializeState (agModel, successCb, errorCb) {
   //  deref(agModel, (err, fullSchema)=>{
   //      if(err) return errorCb(err);
         try{
-  //          agModel = fullSchema;
+            //agModel = fullSchema;
 
             var agState = new state(
                 agModel.id,
@@ -20,9 +23,9 @@ function _initializeState (agModel, successCb, errorCb) {
                   agModel.terms.pricing.of[0].cost,
                   agModel.terms.pricing.of[0].billing.period,
                   agModel.terms.pricing.of[0].billing.penalties
-                )*/ {}
+                )*/ []
             )
-
+            /**
             for (var q in agModel.terms.quotas){
                 var quota = agModel.terms.quotas[q];
 
@@ -35,14 +38,14 @@ function _initializeState (agModel, successCb, errorCb) {
                     var qscope = quota.of[of].scope;
                     var metricSchema = quota.over[metric];
 
-                    var metricS = new metricState(
+                    var metricS = new _metricState(
                                           metric,
                                           new scope(qscope),
                                           new schema (metricSchema),
                                           new window("static", quota.of[of].limits[0].period)
                                         );
 
-                    agState.metrics.push(metricS);
+                    //agState.metrics.push(metricS);
 
                     var quotaS = new quotaState(
                                         quota.id,
@@ -67,14 +70,14 @@ function _initializeState (agModel, successCb, errorCb) {
                     var qscope = rate.of[of].scope;
                     var metricSchema = rate.over[metric];
 
-                    var metricS = new metricState(
+                    var metricS = new _metricState(
                                           metric,
                                           new scope(qscope),
                                           new schema (metricSchema),
                                           new window("static", rate.of[of].limits[0].period)
                                         );
 
-                    agState.metrics.push(metricS);
+                  //  agState.metrics.push(metricS);
 
                     var rateS = new rateState(
                                         rate.id,
@@ -93,16 +96,18 @@ function _initializeState (agModel, successCb, errorCb) {
                     agState.scope[s] = '*';
                 }
                 for(var of in guarantee.of){
+                    console.log(of);
                     var qscope = guarantee.of[of].scope;
+                    console.log(qscope);
                     for( var metric in guarantee.of[of].with ){
-                        var metricS = new metricState(
+                        var metricS = new _metricState(
                                               metric,
                                               new scope(qscope),
                                               {},
                                               new window(guarantee.of[of].window.type, guarantee.of[of].window.period)
                                             );
 
-                        agState.metrics.push(metricS);
+                    //    agState.metrics.push(metricS);
                     }
                     var guaranteeS = new guaranteeState(
                                         guarantee.id,
@@ -113,7 +118,7 @@ function _initializeState (agModel, successCb, errorCb) {
                                     );
                     agState.guarantees.push(guaranteeS);
                 }
-            }
+            }**/
             successCb(agState);
         }catch(err){
             errorCb(err);
@@ -174,7 +179,7 @@ function guaranteeState(guarantee, scope, logs, period, evidences){
     this.records = [];
 }
 
-function metricState (metric, scope, schema, window){
+function _metricState (metric, scope, schema, window){
     this.metric = metric;
     this.scope = scope;
     this.schema = schema;

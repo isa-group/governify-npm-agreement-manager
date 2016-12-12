@@ -22,12 +22,32 @@ module.exports = {
     }
 }
 
+function metricState (metric, scope, schema, window){
+    this.metric = metric;
+    this.scope = scope;
+    this.schema = schema;
+    this.window = window;
+    this.records = [];
+}
 //save functions
-function _metricsSave (state, name, scope, window, value){
+function _metricsSave (state, name, scope, window, value, logsState, evidences){
+      var updated = false;
       for (var m in state.metrics){
           var metric = state.metrics[m];
-          if(isMetrics(name, scope, window, metric))
-              save(metric.records, new recordMetrics(value));
+          if( isMetrics(name, scope, window, metric)){
+              save(metric.records, new recordMetrics(value, logsState, evidences));
+              updated = true;
+          }
+      }
+      if(!updated){
+          var newMetric = new metricState(
+              name,
+              scope,
+              {},
+              window
+          )
+          save(newMetric.records, new recordMetrics(value, logsState, evidences));
+          state.metrics.push(newMetric);
       }
 }
 
@@ -74,11 +94,10 @@ function _ratesGet (state, name, scope){
 
 //current functions
 function _metricsCurrent (state, name, scope, window){
-      for (var m in state.metrics){
-          var metric = state.metrics[m];
-          if(isMetrics(name, scope, window, metric))
-              return current(metric);
-      }
+      var returned = state.metrics.filter((element, index, array) => {
+          return isMetrics(name, scope, window, element);
+      });
+      return current(returned[0]);
 }
 
 function _quotasCurrent (state, name, scope){
@@ -105,11 +124,11 @@ function isMetrics (name, scope, window, metric){
         ret = ret && false;
     }
     for (var s in scope){
-        if( metric.scope[s] != scope[s])
+        if( metric.scope[s] != scope[s] && scope[s] != "*" )
           ret = ret && false;
     }
     for (var w in window){
-        if(metric.window[w] != window[w])
+        if(metric.window[w] != window[w] && w == "type" && w == "period")
           ret = ret && false;
     }
     return ret;
@@ -149,12 +168,17 @@ function get (value){
 }
 
 function current (value){
-    return value.records[value.records.length - 1];
+    if(value) return value.records[value.records.length - 1];
+    else return null;
 }
 
-function recordMetrics (value){
+function recordMetrics (value, logsState, evidences){
     this.value = value;
     this.time = iso8601.fromDate(new Date());
+    if(logsState == 0 || logsState)
+      this.logsState = logsState;
+    if(evidences)
+      this.evidences = evidences;
 }
 function recordQuotas(value){
     this.fulfilled = value;

@@ -1,39 +1,36 @@
 context:
-  id: pro_petstore_YMkddfs
-  sla: '1.0'
+  id: sla01_pro_petstore
+  sla: 1.0
   type: instance
   api: ./petstore-service.yml
   provider: ISAGroup
-  consumer: icinetic
+  consumer: icinetic.com
   validity:
     effectiveDate: 2015-05-16T09:00:54Z
     expirationDate: 2016-05-16T09:00:54Z
 infrastructure:
-  supervisor: http://supervisor.oai.governify.io/api/v1/
-  monitor: http://monitor.oai.governify.io/api/v1/
-  logs: http://logs.oai.governify.io/api/v1/
+  supervisor: http://supervisor.sla4oai.governify.io/v1/
+  monitor: http://monitor.sla4oai.governify.io/v1/
 metrics:
   animalTypes:
     type: integer
     format: int64
     description: Number of different animal types.
-    resolution: payload # metric will be passed to /check by payload
-    # before consumption for sla state calculation
-  requests:
-    type: integer
-    format: int64
-    description: Number of requests
-    resolution: consumption # metric will be passed after consumption
-
+    resolution: check
   resourceInstances:
     type: integer
     format: int64
     description: Number of pet resources
-    resolution: consumption # metric will be passed after consumption
-
+    resolution: consumption
+  requests:
+    type: "int64"
+    description: "Number of requests"
+    resolution: consumption
   responseTimeMs:
-    $ref: tests/metrics.json#/responseTimeMs
-
+    type: "double"
+    unit: "ms"
+    description: "Response time in miliseconds"
+    resolution: consumption
 pricing:
   cost: 50
   currency: EUR
@@ -48,14 +45,14 @@ quotas:
     get:
       requests:
         - max: 20
-          period: secondly
+          period: minutely
           scope: account
         - max: 100
-          period: secondly
+          period: minutely
           scope: tenant
     post:
       requests:
-        - max: 100
+        - max: 5
           period: minutely
       resourceInstances:
         - max: 500
@@ -66,7 +63,7 @@ rates:
     get:
       requests:
         - max: 20
-          period: secondly
+          period: minutely
 guarantees:
   global:
     global:
