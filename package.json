@@ -21,6 +21,6 @@
     "dependencies": {
         "iso8601": "^1.1.1",
         "js-yaml": "^3.6.1",
-        "json-schema-deref": "^0.3.2"
+        "json-schema-deref": "^0.4.4"
     }
 }
